@@ -1,33 +1,23 @@
-import { StoreProvider, useStore } from "./store"
+import { BrowserRouter } from "react-router-dom"
+import { AuthProvider } from "./context/AuthContext"
 import Navbar from "./components/Navbar"
-import Home from "./pages/Home"
-import Details from "./pages/Details"
-import Bookings from "./pages/Bookings"
-import Provider from "./pages/Provider"
-import Admin from "./pages/Admin"
-import Login from "./pages/Login"
-
-function Pages() {
-  const { page, user } = useStore()
-  return (
-    <>
-      {page === "home" && <Home />}
-      {page === "details" && <Details />}
-      {page === "login" && <Login />}
-      {page === "bookings" && user?.role === "tourist" && <Bookings />}
-      {page === "provider" && user?.role === "provider" && <Provider />}
-      {page === "admin" && user?.role === "admin" && <Admin />}
-    </>
-  )
-}
+import AppRouter from "./router"
+import "./App.css"
 
 export default function App() {
   return (
-    <StoreProvider>
-      <div className="min-h-screen bg-gray-100">
-        <Navbar />
-        <Pages />
-      </div>
-    </StoreProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <div className="min-h-screen bg-gray-50 flex flex-col text-gray-900 font-sans antialiased">
+          <Navbar />
+          <main className="flex-1">
+            <AppRouter />
+          </main>
+          <footer className="bg-white border-t border-gray-200 py-6 text-center text-xs text-gray-500">
+            &copy; {new Date().getFullYear()} Ceylon Travel Excursions & Discovery. Powered by rad_api.
+          </footer>
+        </div>
+      </AuthProvider>
+    </BrowserRouter>
   )
 }

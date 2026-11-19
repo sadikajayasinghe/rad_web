@@ -107,7 +107,7 @@ export default function Login() {
                       : "border-gray-200 text-gray-600"
                   }`}
                 >
-                  🏖️ Tourist
+                   Tourist
                 </button>
                 <button
                   type="button"
@@ -118,7 +118,7 @@ export default function Login() {
                       : "border-gray-200 text-gray-600"
                   }`}
                 >
-                  🛶 Activity Host
+                   Activity Host
                 </button>
               </div>
             </div>

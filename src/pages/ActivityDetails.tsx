@@ -17,7 +17,7 @@ export default function ActivityDetails() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Booking Form State
+ 
   const [bookingDate, setBookingDate] = useState("")
   const [participants, setParticipants] = useState(1)
   const [bookingLoading, setBookingLoading] = useState(false)

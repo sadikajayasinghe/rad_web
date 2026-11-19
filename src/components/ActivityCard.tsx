@@ -27,7 +27,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
       <div className="p-5 flex-1 flex flex-col justify-between">
         <div>
           <p className="text-xs font-medium text-indigo-600 mb-1 flex items-center">
-            📍 {activity.location}
+             {activity.location}
           </p>
           <h3 className="font-bold text-gray-900 text-lg line-clamp-1 mb-2">
             {activity.title}

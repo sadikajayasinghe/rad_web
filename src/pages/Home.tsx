@@ -92,7 +92,7 @@ export default function Home() {
       ) : error ? (
         <div className="p-6 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-center">
           <p className="font-semibold">{error}</p>
-          <p className="text-sm mt-1">Make sure rad_api backend is running on http://localhost:3000</p>
+          <p className="text-sm mt-1">Make sure rad_api backend is running on http://localhost:5000</p>
         </div>
       ) : activities.length === 0 ? (
         <div className="bg-white rounded-3xl p-12 text-center border border-gray-200">

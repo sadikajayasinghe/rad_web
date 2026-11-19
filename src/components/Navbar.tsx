@@ -16,7 +16,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-6">
             <Link to="/" className="flex items-center space-x-2 text-indigo-600 font-bold text-xl tracking-tight">
-              <span>🏝️ Ceylon Travel</span>
+              <span> Lanka Travel</span>
             </Link>
 
             <nav className="hidden md:flex space-x-4">

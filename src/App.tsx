@@ -1,6 +1,7 @@
 import { BrowserRouter } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
 import Navbar from "./components/Navbar"
+import ChatBot from "./components/ChatBot"
 import AppRouter from "./router"
 import "./App.css"
 
@@ -13,6 +14,7 @@ export default function App() {
           <main className="flex-1">
             <AppRouter />
           </main>
+          <ChatBot />
           <footer className="bg-white border-t border-gray-200 py-6 text-center text-xs text-gray-500">
             &copy; {new Date().getFullYear()} Ceylon Travel Excursions & Discovery. Powered by rad_api.
           </footer>

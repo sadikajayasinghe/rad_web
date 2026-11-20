@@ -11,9 +11,9 @@ export default function Provider() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [editingActivity, setEditingActivity] = useState<Activity | null>(null)
 
-  
-  const [formData, setFormData] = useState({
+  const initialForm = {
     title: "",
     description: "",
     category: "Adventure",
@@ -22,7 +22,30 @@ export default function Provider() {
     duration: "2 hours",
     maxParticipants: 10,
     images: "",
-  })
+  }
+  
+  const [formData, setFormData] = useState(initialForm)
+
+  const openAddModal = () => {
+    setEditingActivity(null)
+    setFormData(initialForm)
+    setShowAddModal(true)
+  }
+
+  const openEditModal = (act: Activity) => {
+    setEditingActivity(act)
+    setFormData({
+      title: act.title,
+      description: act.description,
+      category: act.category,
+      location: act.location,
+      pricePerPerson: act.pricePerPerson,
+      duration: act.duration,
+      maxParticipants: act.maxParticipants,
+      images: Array.isArray(act.images) ? act.images.join(", ") : "",
+    })
+    setShowAddModal(true)
+  }
 
   const loadData = async () => {
     setLoading(true)
@@ -44,33 +67,32 @@ export default function Provider() {
     loadData()
   }, [])
 
-  const handleCreateActivity = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       const imgArray = formData.images
-        ? formData.images.split(",").map((s) => s.trim())
+        ? formData.images.split(",").map((s) => s.trim()).filter(Boolean)
         : []
 
-      await activityService.createActivity({
+      const payload = {
         ...formData,
         pricePerPerson: Number(formData.pricePerPerson),
         maxParticipants: Number(formData.maxParticipants),
         images: imgArray,
-      })
+      }
+
+      if (editingActivity) {
+        await activityService.updateActivity(editingActivity._id, payload)
+      } else {
+        await activityService.createActivity(payload)
+      }
+
       setShowAddModal(false)
-      setFormData({
-        title: "",
-        description: "",
-        category: "Adventure",
-        location: "",
-        pricePerPerson: 50,
-        duration: "2 hours",
-        maxParticipants: 10,
-        images: "",
-      })
+      setEditingActivity(null)
+      setFormData(initialForm)
       await loadData()
     } catch (err: any) {
-      alert(err.message || "Failed to create activity")
+      alert(err.message || "Failed to save activity")
     }
   }
 
@@ -104,7 +126,7 @@ export default function Provider() {
         </div>
 
         <button
-          onClick={() => setShowAddModal(true)}
+          onClick={openAddModal}
           className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow transition self-start sm:self-auto"
         >
           + Add New Activity
@@ -146,22 +168,43 @@ export default function Provider() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {activities.map((a) => (
-              <div key={a._id} className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold text-indigo-600">{a.category}</span>
-                  <StatusBadge status={a.status} />
+              <div key={a._id} className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm overflow-hidden flex flex-col justify-between">
+                <div>
+                  <div className="h-36 w-full rounded-xl overflow-hidden mb-3 bg-gray-100">
+                    <img
+                      src={a.images && a.images.length > 0 ? a.images[0] : "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80"}
+                      alt={a.title}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80"
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-bold text-indigo-600">{a.category}</span>
+                    <StatusBadge status={a.status} />
+                  </div>
+                  <h3 className="font-bold text-gray-900 text-lg mb-1">{a.title}</h3>
+                  <p className="text-xs text-gray-500 mb-2">📍 {a.location}</p>
+                  <p className="text-sm text-gray-600 line-clamp-2 mb-4">{a.description}</p>
                 </div>
-                <h3 className="font-bold text-gray-900 text-lg mb-1">{a.title}</h3>
-                <p className="text-xs text-gray-500 mb-3">📍 {a.location}</p>
-                <p className="text-sm text-gray-600 line-clamp-2 mb-4">{a.description}</p>
                 <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                  <span className="font-bold text-gray-900 text-sm">${a.pricePerPerson} / person</span>
-                  <button
-                    onClick={() => handleDeleteActivity(a._id)}
-                    className="text-xs font-semibold text-rose-600 hover:text-rose-800"
-                  >
-                    Delete
-                  </button>
+                  <span className="font-bold text-gray-900 text-sm">LKR {a.pricePerPerson.toLocaleString()} / person</span>
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={() => openEditModal(a)}
+                      className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteActivity(a._id)}
+                      className="text-xs font-semibold text-rose-600 hover:text-rose-800 cursor-pointer"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -216,12 +259,14 @@ export default function Provider() {
         )
       )}
 
-      {/* Modal: Add Activity */}
+      {/* Modal: Add / Edit Activity */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Create New Tourist Experience</h2>
-            <form onSubmit={handleCreateActivity} className="space-y-4">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              {editingActivity ? "Edit Tourist Experience" : "Create New Tourist Experience"}
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Title</label>
                 <input
@@ -313,14 +358,37 @@ export default function Provider() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Images (comma separated URLs)</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Image URL (Direct image link or Unsplash)
+                </label>
                 <input
                   type="text"
                   value={formData.images}
                   onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                  placeholder="https://images.unsplash.com/..., https://..."
+                  placeholder="https://images.unsplash.com/..."
                   className="w-full border border-gray-300 rounded-xl p-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
                 />
+                <p className="text-[11px] text-gray-400 mt-1">
+                  Tip: Use direct image URLs (ending in .jpg, .png, or Unsplash links).
+                </p>
+
+                {/* Live Preview */}
+                {formData.images.trim() && (
+                  <div className="mt-2.5">
+                    <p className="text-[11px] font-semibold text-gray-600 mb-1">Image Preview:</p>
+                    <div className="h-28 w-full rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+                      <img
+                        src={formData.images.split(",")[0].trim()}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null
+                          e.currentTarget.src = "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80"
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
@@ -333,9 +401,9 @@ export default function Provider() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow"
+                  className="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow cursor-pointer"
                 >
-                  Publish for Approval
+                  {editingActivity ? "Save Changes" : "Publish for Approval"}
                 </button>
               </div>
             </form>

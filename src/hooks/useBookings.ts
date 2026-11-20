@@ -1,13 +1,15 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { bookingService } from "../service/booking.service"
 import type { Booking } from "../service/types"
+
 
 export function useBookings(isProvider: boolean = false) {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchBookings = useCallback(async () => {
+  
+  const fetchBookings = async () => {
     setLoading(true)
     setError(null)
     try {
@@ -20,11 +22,12 @@ export function useBookings(isProvider: boolean = false) {
     } finally {
       setLoading(false)
     }
-  }, [isProvider])
+  }
 
+ 
   useEffect(() => {
     fetchBookings()
-  }, [fetchBookings])
+  }, [isProvider])
 
   return {
     bookings,

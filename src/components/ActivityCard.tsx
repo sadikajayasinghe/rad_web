@@ -17,6 +17,10 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
         <img
           src={defaultImage}
           alt={activity.title}
+          onError={(e) => {
+            e.currentTarget.onerror = null
+            e.currentTarget.src = "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80"
+          }}
           className="w-full h-full object-cover transition duration-300 hover:scale-105"
         />
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-xs font-semibold text-gray-700 shadow-sm">

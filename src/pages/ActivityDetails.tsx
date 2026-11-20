@@ -135,7 +135,15 @@ export default function ActivityDetails() {
 
       {/* Main Image Banner */}
       <div className="w-full h-80 sm:h-96 rounded-3xl overflow-hidden shadow-sm mb-8 bg-gray-100">
-        <img src={defaultImage} alt={activity.title} className="w-full h-full object-cover" />
+        <img
+          src={defaultImage}
+          alt={activity.title}
+          onError={(e) => {
+            e.currentTarget.onerror = null
+            e.currentTarget.src = "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80"
+          }}
+          className="w-full h-full object-cover"
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -9,10 +9,10 @@ interface Message {
 }
 
 const QUICK_PROMPTS = [
-  "🐘 Best wildlife safari?",
-  "🐋 Whale watching season?",
-  "⛰️ Ella hiking tips?",
-  "🏄 Surfing for beginners?"
+  " Best wildlife safari?",
+  " Whale watching season?",
+  " Ella hiking tips?",
+  " Surfing for beginners?"
 ]
 
 export default function ChatBot() {
@@ -24,7 +24,7 @@ export default function ChatBot() {
       id: "initial",
       role: "model",
       content:
-        "Ayubowan! 🙏 I'm your LankaGuide AI assistant. Ask me anything about safaris, hiking, surfing, whale watching, or planning your trip across Sri Lanka!",
+        "Ayubowan!  I'm your LankaGuide AI assistant. Ask me anything about safaris, hiking, surfing, whale watching, or planning your trip across Sri Lanka!",
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
     }
   ])
@@ -100,7 +100,7 @@ export default function ChatBot() {
         id: "initial",
         role: "model",
         content:
-          "Ayubowan! 🙏 I'm your LankaGuide AI assistant. How can I help you discover Sri Lanka today?",
+          "Ayubowan!  I'm your LankaGuide AI assistant. How can I help you discover Sri Lanka today?",
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
       }
     ])
@@ -115,7 +115,7 @@ export default function ChatBot() {
           className="group flex items-center space-x-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer"
           aria-label="Open AI Travel Assistant"
         >
-          <span className="text-xl">🌴</span>
+          <span className="text-xl"></span>
           <span className="font-semibold text-sm">Ask LankaGuide AI</span>
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>

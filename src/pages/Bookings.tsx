@@ -82,7 +82,7 @@ export default function Bookings() {
                   </h3>
 
                   <p className="text-sm text-gray-600 mt-1">
-                    👥 {b.participants} participant(s) • Total:{" "}
+                     {b.participants} participant(s) • Total:{" "}
                     <span className="font-bold text-indigo-600">${b.totalPrice}</span>
                   </p>
                 </div>
